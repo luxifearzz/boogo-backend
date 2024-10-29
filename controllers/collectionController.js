@@ -1,14 +1,17 @@
 // controllers/collectionController.js
-const Book = require('../models/Book');
-const Collection = require('../models/Collection');
-const User = require('../models/User');
+const Book = require("../models/Book");
+const Collection = require("../models/Collection");
+const User = require("../models/User");
 
 // ดึงข้อมูลคอลเล็กชันทั้งหมดของผู้ใช้
 const getCollections = async (req, res) => {
     const user_id = req.user.id;
 
     try {
-        const collections = await Collection.find({ user_id }).populate('books', 'title');
+        const collections = await Collection.find({ user_id }).populate(
+            "books",
+            "title"
+        );
         res.json(collections);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -22,7 +25,9 @@ const createCollection = async (req, res) => {
 
     try {
         if (await Collection.findOne({ user_id, name })) {
-            return res.status(409).json({ message: 'You already have this collections name' })
+            return res
+                .status(409)
+                .json({ message: "You already have this collections name" });
         }
         const collection = new Collection({ user_id, name });
         const newCollection = await collection.save();
@@ -40,11 +45,17 @@ const deleteCollection = async (req, res) => {
     try {
         const collection = await Collection.findOne({ _id: id, user_id });
         if (!collection) {
-            return res.status(404).json({ message: 'Collection not found or not authorized to delete' });
+            return res
+                .status(404)
+                .json({
+                    message: "Collection not found or not authorized to delete",
+                });
         }
 
         await Collection.deleteOne({ _id: id });
-        return res.status(200).json({ message: 'Collection deleted successfully' });
+        return res
+            .status(200)
+            .json({ message: "Collection deleted successfully" });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -53,14 +64,22 @@ const deleteCollection = async (req, res) => {
 // ดึงหนังสือในคอลเล็กชันที่กำหนด
 const getBooksFromCollection = async (req, res) => {
     const { id } = req.params;
+    const user_id = req.user.id;
 
     try {
-        const collection = await Collection.findById(id)
-        if (!collection) return res.status(404).json({ message: 'Collection not found' });
+        const collection = await Collection.findOne({ _id: id, user_id });
+        if (!collection)
+            return res
+                .status(404)
+                .json({ message: "Collection not found or not authorized" });
 
-        const books = await Book.find({ _id: { $in: collection.books } }).populate('genres', 'name').populate('authors', 'name');
+        const books = await Book.find({ _id: { $in: collection.books } })
+            .populate("genres", "name")
+            .populate("authors", "name");
         if (books.length === 0) {
-            return res.status(200).json({ message: 'No books in this collection' });
+            return res
+                .status(200)
+                .json({ message: "No books in this collection" });
         }
 
         res.status(200).json(books);
@@ -77,11 +96,15 @@ const addBookToCollection = async (req, res) => {
 
     try {
         const collection = await Collection.findOne({ _id: id, user_id });
-        if (!collection) return res.status(404).json({ message: 'Collection not found or not authorized' });
+        if (!collection)
+            return res
+                .status(404)
+                .json({ message: "Collection not found or not authorized" });
 
         // ตรวจสอบว่า `book_id` มีอยู่ในฐานข้อมูลหรือไม่
         const bookExists = await Book.exists({ _id: book_id });
-        if (!bookExists) return res.status(404).json({ message: 'Book not found' });
+        if (!bookExists)
+            return res.status(404).json({ message: "Book not found" });
 
         // ใช้ `$addToSet` เพื่อเพิ่มหนังสือและป้องกันการซ้ำซ้อน
         await Collection.updateOne(
@@ -89,7 +112,10 @@ const addBookToCollection = async (req, res) => {
             { $addToSet: { books: book_id } }
         );
 
-        const updatedCollection = await Collection.findById(id).populate('books', 'title');
+        const updatedCollection = await Collection.findById(id).populate(
+            "books",
+            "title"
+        );
         return res.status(201).json(updatedCollection);
     } catch (err) {
         return res.status(400).json({ message: err.message });
@@ -103,7 +129,10 @@ const removeBookFromCollection = async (req, res) => {
 
     try {
         const collection = await Collection.findOne({ _id: id, user_id });
-        if (!collection) return res.status(404).json({ message: 'Collection not found or not authorized' });
+        if (!collection)
+            return res
+                .status(404)
+                .json({ message: "Collection not found or not authorized" });
 
         // ใช้ `$pull` เพื่อลบหนังสือที่กำหนดออกจากคอลเล็กชัน
         await Collection.updateOne(
