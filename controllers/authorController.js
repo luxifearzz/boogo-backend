@@ -32,7 +32,8 @@ const createAuthor = async (req, res) => {
     try {
         const { name, biography, profile_picture, dateOfBirth, nationality, booksWritten = [] } = req.body;
         
-        if (Author.findOne({ name })) return res.status(409).json({ message: 'Already has author at this name' })
+        const oldAuthor = await Author.findOne({ name })
+        if (oldAuthor) return res.status(409).json({ message: `Already has author at this name ${oldAuthor}` })
 
         const author = new Author({
             name,
@@ -174,7 +175,7 @@ const removeBookFromAuthor = async (req, res) => {
         author.booksWritten = author.booksWritten.filter(id => id.toString() !== bookId);
         await author.save();
 
-        res.status(200).json({ message: 'Book removed successfully', author });
+        res.status(200).json({ message: 'Book removed successfully'});
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
