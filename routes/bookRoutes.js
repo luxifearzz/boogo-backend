@@ -4,11 +4,13 @@ const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware')
 const adminMiddleware = require('../middleware/adminMiddleware')
 const subscriptionRequiredMiddleware = require('../middleware/subscriptionRequiredMiddleware')
-const { getBooks, getBookDetailsById, createBook, updateBookById, deleteBook, createBookContent, getBookContent, updateBookContent, deleteBookContent } = require('../controllers/bookController');
+const { getBooks, getBookDetailsById, createBook, updateBookById, deleteBook, createBookContent, getBookContent, updateBookContent, deleteBookContent, addGenresToBook, getBookChapters } = require('../controllers/bookController');
 
 router.get('/', getBooks);
 
 router.get('/:bookId', getBookDetailsById)
+
+router.get('/:bookId/chapters', getBookChapters)
 
 router.post('/', authMiddleware, adminMiddleware, createBook);
 
@@ -16,12 +18,14 @@ router.patch('/:bookId', authMiddleware, adminMiddleware, updateBookById)
 
 router.delete('/:bookId', authMiddleware, adminMiddleware, deleteBook)
 
-router.post('/:bookId/chapters', authMiddleware, adminMiddleware, createBookContent)
+router.post('/:bookId/genres', authMiddleware, adminMiddleware, addGenresToBook)
 
-router.get('/:bookId/chapters/:chapterNo', authMiddleware, subscriptionRequiredMiddleware, getBookContent)
+router.post('/:bookId/contents', authMiddleware, adminMiddleware, createBookContent)
 
-router.patch('/:bookId/chapters/:chapterNo', authMiddleware, adminMiddleware, updateBookContent)
+router.get('/:bookId/contents/:chapterNo?', authMiddleware, subscriptionRequiredMiddleware, getBookContent)
 
-router.delete(':bookId/chapters/:chapterNo', authMiddleware, adminMiddleware, deleteBookContent)
+router.patch('/:bookId/contents/:chapterNo', authMiddleware, adminMiddleware, updateBookContent)
+
+router.delete(':bookId/contents/:chapterNo', authMiddleware, adminMiddleware, deleteBookContent)
 
 module.exports = router;

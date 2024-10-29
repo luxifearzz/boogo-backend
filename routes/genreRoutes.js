@@ -11,6 +11,7 @@ const {
     createGenre,
     updateGenreById,
     deleteGenreById,
+    addBooksToGenre,
 } = require('../controllers/genreController');
 
 // สร้าง Genre ใหม่
@@ -27,5 +28,7 @@ router.patch('/:id', authMiddleware, adminMiddleware, updateGenreById);
 
 // ลบ Genre โดยใช้ ID
 router.delete('/:id', authMiddleware, adminMiddleware, deleteGenreById);
+
+router.post('/:genreId/books', authMiddleware, adminMiddleware, addBooksToGenre)
 
 module.exports = router;

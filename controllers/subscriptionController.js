@@ -14,6 +14,39 @@ const createSubscriptionPlan = async (req, res) => {
     }
 };
 
+const updateSubscriptionPlan = async (req, res) => {
+    const { planId } = req.params;
+    const planData = req.body;
+
+    try {
+        const updatedPlan = await SubscriptionPlan.findByIdAndUpdate(planId, planData, { new: true });
+
+        if (!updatedPlan) {
+            return res.status(404).json({ message: 'Subscription plan not found' });
+        }
+
+        return res.json(updatedPlan);
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
+};
+
+const deleteSubscriptionPlan = async (req, res) => {
+    const { planId } = req.params;
+
+    try {
+        const deletedPlan = await SubscriptionPlan.findByIdAndDelete(planId);
+
+        if (!deletedPlan) {
+            return res.status(404).json({ message: 'Subscription plan not found' });
+        }
+
+        return res.json({ message: 'Subscription plan deleted successfully', deletedPlan });
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
+};
+
 // ดึงข้อมูลแผนการสมัครสมาชิกทั้งหมด
 const getSubscriptionPlans = async (req, res) => {
     try {
@@ -104,6 +137,8 @@ const unsubscribe = async (req, res) => {
 
 module.exports = {
     createSubscriptionPlan,
+    updateSubscriptionPlan,
+    deleteSubscriptionPlan,
     getSubscriptionPlans,
     subscribe,
     unsubscribe

@@ -21,6 +21,9 @@ const createCollection = async (req, res) => {
     const user_id = req.user.id;
 
     try {
+        if (await Collection.findOne({ user_id, name })) {
+            return res.status(409).json({ message: 'You already have this collections name' })
+        }
         const collection = new Collection({ user_id, name });
         const newCollection = await collection.save();
         return res.status(201).json(newCollection);

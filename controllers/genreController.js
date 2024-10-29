@@ -118,10 +118,52 @@ const deleteGenreById = async (req, res) => {
     }
 };
 
+const addBooksToGenre = async (req, res) => {
+    const { genreId } = req.params;
+    const { books } = req.body; // array of book IDs
+
+    try {
+        // ตรวจสอบว่า books เป็น array และไม่ว่างเปล่า
+        if (!Array.isArray(books) || books.length === 0) {
+            return res.status(400).json({ message: 'Please provide an array of book IDs' });
+        }
+
+        // ตรวจสอบว่าทุก book ID มีอยู่จริงในฐานข้อมูล
+        const validBooks = await Book.find({ _id: { $in: books } }, '_id');
+        const validBookIds = validBooks.map(book => book._id.toString());
+
+        if (validBookIds.length !== books.length) {
+            return res.status(400).json({ message: 'Some book IDs are invalid' });
+        }
+
+        // อัปเดตฟิลด์ books ใน Genre โดยเพิ่ม books
+        const updatedGenre = await Genre.findByIdAndUpdate(
+            genreId,
+            { $addToSet: { books: { $each: validBookIds } } }, // ใช้ $addToSet เพื่อหลีกเลี่ยงค่าซ้ำ
+            { new: true } // ส่งคืนเอกสารที่อัปเดตแล้ว
+        );
+
+        if (!updatedGenre) {
+            return res.status(404).json({ message: 'Genre not found' });
+        }
+
+        // อัปเดตฟิลด์ genres ใน Book โดยเพิ่ม genreId
+        await Book.updateMany(
+            { _id: { $in: validBookIds } },
+            { $addToSet: { genres: genreId } } // ใช้ $addToSet เพื่อหลีกเลี่ยงค่าซ้ำ
+        );
+
+        return res.json(updatedGenre);
+    } catch (err) {
+        return res.status(500).json({ message: 'Error adding books to genre', error: err.message });
+    }
+};
+
 module.exports = {
     getAllGenres,
     getGenreById,
     createGenre,
     updateGenreById,
     deleteGenreById,
+    addBooksToGenre
 };
