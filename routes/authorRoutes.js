@@ -5,9 +5,9 @@ const authMiddleware = require('../middlewares/authMiddleware')
 const adminMiddleware = require('../middlewares/adminMiddleware')
 const { getAuthors, getAuthorById, createAuthor, updateAuthorById, deleteAuthorById, addBookToAuthor, removeBookFromAuthor } = require('../controllers/authorController');
 
-router.get('/', authMiddleware, getAuthors);
+router.get('/', getAuthors);
 
-router.get('/:authorId', authMiddleware, getAuthorById);
+router.get('/:authorId', getAuthorById);
 
 router.post('/', authMiddleware, adminMiddleware, createAuthor);
 
