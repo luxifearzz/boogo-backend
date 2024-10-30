@@ -9,7 +9,7 @@ const {
     addBookToCollection,
     removeBookFromCollection
 } = require('../controllers/collectionController');
-const authMiddleware = require('../middlewares/authmiddleware'); // Middleware สำหรับตรวจสอบ JWT
+const authMiddleware = require('../middlewares/authMiddleware'); // Middleware สำหรับตรวจสอบ JWT
 
 // GET all collections
 router.get('/', authMiddleware, getCollections);

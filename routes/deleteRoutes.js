@@ -18,8 +18,8 @@ const {
 } = require('../controllers/deleteController');
 
 // Import middlewares for authentication and authorization
-const authMiddleware = require('../middlewares/authmiddleware');
-const adminMiddleware = require('../middlewares/adminmiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');
+const adminMiddleware = require('../middlewares/adminMiddleware');
 
 // Define routes with delete controllers
 router.delete('/authors', authMiddleware, adminMiddleware, deleteAuthor);

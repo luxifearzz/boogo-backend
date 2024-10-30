@@ -1,9 +1,9 @@
 // routes/bookRoutes.js
 const express = require('express');
 const router = express.Router();
-const authMiddleware = require('../middlewares/authmiddleware')
-const adminMiddleware = require('../middlewares/adminmiddleware')
-const subscriptionRequiredMiddleware = require('../middlewares/subscriptionRequiredmiddleware')
+const authMiddleware = require('../middlewares/authMiddleware')
+const adminMiddleware = require('../middlewares/adminMiddleware')
+const subscriptionRequiredMiddleware = require('../middlewares/subscriptionRequiredMiddleware')
 const { getBooks, getBookDetailsById, createBook, updateBookById, deleteBook, createBookContent, getBookContent, updateBookContent, deleteBookContent, addGenresToBook, getBookChapters } = require('../controllers/bookController');
 
 router.get('/', getBooks);

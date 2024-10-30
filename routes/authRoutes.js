@@ -1,9 +1,9 @@
 // routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
-const logoutMiddleware = require('../middlewares/logoutmiddleware')
+const logoutMiddleware = require('../middlewares/logoutMiddleware')
 const { registerUser, loginUser, getUserInfo, logout, getLoginInfo, getRegisterInfo } = require('../controllers/authController');
-const authMiddleware = require('../middlewares/authmiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 router.get('/register', logoutMiddleware, getRegisterInfo)
 
