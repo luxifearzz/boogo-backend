@@ -3,6 +3,14 @@ const Blacklist = require('../models/Blacklist')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const isLoggedOut = async (req, res) => {
+    return res.json({ message: "You're logged out" })
+}
+
+const isLoggedIn = async (req, res) => {
+    return res.json({ message: "You're logged in" })
+}
+
 const getRegisterInfo = async (req, res) => {
     return res.json({ message: 'Please perform field "name", "email" and "password" and post to register' })
 }
@@ -96,6 +104,8 @@ const logout = async (req, res) => {
 };
 
 module.exports = {
+    isLoggedIn,
+    isLoggedOut,
     getRegisterInfo,
     registerUser,
     getLoginInfo,

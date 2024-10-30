@@ -2,8 +2,12 @@
 const express = require('express');
 const router = express.Router();
 const logoutMiddleware = require('../middlewares/logoutMiddleware')
-const { registerUser, loginUser, getUserInfo, logout, getLoginInfo, getRegisterInfo } = require('../controllers/authController');
+const { registerUser, loginUser, getUserInfo, logout, getLoginInfo, getRegisterInfo, isLoggedIn, isLoggedOut } = require('../controllers/authController');
 const authMiddleware = require('../middlewares/authMiddleware');
+
+router.get('/isLoggedIn', authMiddleware, isLoggedIn)
+
+router.get('/isLoggedOut', logoutMiddleware, isLoggedOut)
 
 router.get('/register', logoutMiddleware, getRegisterInfo)
 
