@@ -24,6 +24,7 @@ const subscriptionRoutes = require('./routes/subscriptionRoutes');
 const authorRoutes = require('./routes/authorRoutes');
 const genreRoutes = require('./routes/genreRoutes');
 const searchRoutes = require('./routes/searchRoutes')
+const deleteRoutes = require('./routes/deleteRoutes')
 
 // Use routes
 app.use('/api/books', bookRoutes);
@@ -34,6 +35,7 @@ app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/authors', authorRoutes)
 app.use('/api/genres', genreRoutes)
 app.use('/api/search', searchRoutes)
+app.use('/api/delete', deleteRoutes)
 
 // Start the server
 const PORT = process.env.PORT || 5000;

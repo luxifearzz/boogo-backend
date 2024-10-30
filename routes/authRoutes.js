@@ -1,12 +1,16 @@
 // routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
-const logoutMiddleware = require('../middleware/logoutMiddleware')
-const { registerUser, loginUser, getUserInfo, logout } = require('../controllers/authController');
-const authMiddleware = require('../middleware/authMiddleware');
+const logoutMiddleware = require('../middlewares/logoutmiddleware')
+const { registerUser, loginUser, getUserInfo, logout, getLoginInfo, getRegisterInfo } = require('../controllers/authController');
+const authMiddleware = require('../middlewares/authmiddleware');
+
+router.get('/register', logoutMiddleware, getRegisterInfo)
 
 // เส้นทาง POST สำหรับการลงทะเบียนผู้ใช้
 router.post('/register', logoutMiddleware, registerUser);
+
+router.get('/login', logoutMiddleware, getLoginInfo)
 
 // เส้นทาง POST สำหรับการเข้าสู่ระบบผู้ใช้
 router.post('/login', logoutMiddleware, loginUser);

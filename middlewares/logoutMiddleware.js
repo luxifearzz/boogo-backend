@@ -1,4 +1,4 @@
-// middleware/logoutMiddleware.js
+// middlewares/logoutMiddleware.js
 const jwt = require('jsonwebtoken');
 
 const logoutMiddleware = (req, res, next) => {

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { createReview, getReviewsByBook, deleteReviewsById } = require('../controllers/reviewController');
-const authMiddleware = require('../middleware/authMiddleware');
-const subscriptionRequiredMiddleware = require('../middleware/subscriptionRequiredMiddleware');
-const adminMiddleware = require('../middleware/adminMiddleware');
+const authMiddleware = require('../middlewares/authmiddleware');
+const subscriptionRequiredMiddleware = require('../middlewares/subscriptionRequiredmiddleware');
+const adminMiddleware = require('../middlewares/adminmiddleware');
 
 // POST สำหรับสร้างรีวิวใหม่
 router.post('/:bookId', authMiddleware, subscriptionRequiredMiddleware, createReview);

@@ -1,4 +1,4 @@
-// middleware/preventDuplicateSubscriptionMiddleware.js
+// middlewares/preventDuplicateSubscriptionMiddleware.js
 const Subscription = require('../models/Subscription');
 
 const preventDuplicateSubscriptionMiddleware = async (req, res, next) => {

@@ -1,8 +1,8 @@
 // routes/authorRoutes.js
 const express = require('express');
 const router = express.Router();
-const authMiddleware = require('../middleware/authMiddleware')
-const adminMiddleware = require('../middleware/adminMiddleware')
+const authMiddleware = require('../middlewares/authmiddleware')
+const adminMiddleware = require('../middlewares/adminmiddleware')
 const { getAuthors, getAuthorById, createAuthor, updateAuthorById, deleteAuthorById, addBookToAuthor, removeBookFromAuthor } = require('../controllers/authorController');
 
 router.get('/', authMiddleware, getAuthors);

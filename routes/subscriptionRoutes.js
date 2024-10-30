@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const { createSubscriptionPlan, updateSubscriptionPlan, deleteSubscriptionPlan, getSubscriptionPlans, subscribe, unsubscribe } = require('../controllers/subscriptionController');
-const authMiddleware = require('../middleware/authMiddleware');
-const adminMiddleware = require('../middleware/adminMiddleware');
-const preventDuplicateSubscriptionMiddleware = require('../middleware/preventDuplicateSubscriptionMiddleware')
+const authMiddleware = require('../middlewares/authmiddleware');
+const adminMiddleware = require('../middlewares/adminmiddleware');
+const preventDuplicateSubscriptionMiddleware = require('../middlewares/preventDuplicateSubscriptionmiddleware')
 
 router.post('/plans', authMiddleware, adminMiddleware, createSubscriptionPlan)
 

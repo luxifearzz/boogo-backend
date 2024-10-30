@@ -19,12 +19,12 @@ const bookSchema = new mongoose.Schema({
         required: true,
     },
     genres: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Genre', required: true }],
+    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true }],
     ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     chapters: [{
         chapter_number: { type: Number, required: true },
         title: { type: String, required: true },
     }],
-    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true }],
     createdAt: {
         type: Date,
         default: Date.now,

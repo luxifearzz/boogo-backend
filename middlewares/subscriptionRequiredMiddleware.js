@@ -1,4 +1,4 @@
-// middleware/subscriptionRequiredMiddleware.js
+// middlewares/subscriptionRequiredMiddleware.js
 const Subscription = require('../models/Subscription')
 
 const subscriptionRequiredMiddleware = async (req, res, next) => {

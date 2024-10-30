@@ -3,6 +3,10 @@ const Blacklist = require('../models/Blacklist')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const getRegisterInfo = async (req, res) => {
+    return res.json({ message: 'Please perform field "name", "email" and "password" and post to register' })
+}
+
 // ลงทะเบียนผู้ใช้ใหม่
 const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
@@ -28,6 +32,10 @@ const registerUser = async (req, res) => {
         return res.status(400).json({ message: err.message });
     }
 };
+
+const getLoginInfo = async (req, res) => {
+    return res.json({ message: 'Please perform field "email" and "password" and post to login' })
+}
 
 // เข้าสู่ระบบผู้ใช้
 const loginUser = async (req, res) => {
@@ -85,7 +93,9 @@ const logout = async (req, res) => {
 };
 
 module.exports = {
+    getRegisterInfo,
     registerUser,
+    getLoginInfo,
     loginUser,
     getUserInfo,
     logout
