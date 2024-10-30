@@ -1,12 +1,18 @@
 // middlewares/logoutMiddleware.js
 const jwt = require('jsonwebtoken');
+const Blacklist = require('../models/Blacklist');
 
-const logoutMiddleware = (req, res, next) => {
+const logoutMiddleware = async (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1];
 
     // ตรวจสอบว่าไม่มี token จึงจะให้เข้าถึงได้
     if (!token) {
         return next(); // ไปต่อได้หากไม่มีโทเค็น (ยังไม่ได้ login)
+    }
+
+    const blackListedToken = await Blacklist.findOne({ token })
+    if (blackListedToken) {
+        return next();
     }
 
     // หากมี token ตรวจสอบความถูกต้อง
