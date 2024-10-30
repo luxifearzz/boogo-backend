@@ -1,14 +1,19 @@
-const Subscription = require('../models/Subscription');
-const SubscriptionPlan = require('../models/SubscriptionPlan');
-const PaymentHistory = require('../models/PaymentHistory');
+const Subscription = require("../models/Subscription");
+const SubscriptionPlan = require("../models/SubscriptionPlan");
+const PaymentHistory = require("../models/PaymentHistory");
 
 const createSubscriptionPlan = async (req, res) => {
     const planData = req.body;
 
+    const oldSubscriptionPlan = await SubscriptionPlan.findOne({ planType: planData.planType })
+    if (oldSubscriptionPlan) {
+        return res.status(409).json({ message: 'Already has subscription with this plan type' })
+    }
+
     try {
         const subscriptionPlan = new SubscriptionPlan(planData);
         const newSubscriptionPlan = await subscriptionPlan.save();
-        return res.json(newSubscriptionPlan);
+        return res.status(201).json(newSubscriptionPlan);
     } catch (err) {
         return res.status(400).json({ message: err.message });
     }
@@ -19,10 +24,16 @@ const updateSubscriptionPlan = async (req, res) => {
     const planData = req.body;
 
     try {
-        const updatedPlan = await SubscriptionPlan.findByIdAndUpdate(planId, planData, { new: true });
+        const updatedPlan = await SubscriptionPlan.findByIdAndUpdate(
+            planId,
+            planData,
+            { new: true }
+        );
 
         if (!updatedPlan) {
-            return res.status(404).json({ message: 'Subscription plan not found' });
+            return res
+                .status(404)
+                .json({ message: "Subscription plan not found" });
         }
 
         return res.json(updatedPlan);
@@ -38,10 +49,15 @@ const deleteSubscriptionPlan = async (req, res) => {
         const deletedPlan = await SubscriptionPlan.findByIdAndDelete(planId);
 
         if (!deletedPlan) {
-            return res.status(404).json({ message: 'Subscription plan not found' });
+            return res
+                .status(404)
+                .json({ message: "Subscription plan not found" });
         }
 
-        return res.json({ message: 'Subscription plan deleted successfully', deletedPlan });
+        return res.json({
+            message: "Subscription plan deleted successfully",
+            deletedPlan,
+        });
     } catch (err) {
         return res.status(400).json({ message: err.message });
     }
@@ -66,13 +82,19 @@ const subscribe = async (req, res) => {
 
         // ตรวจสอบข้อมูลที่จำเป็น
         if (!planId || !payment_info || !payment_info.amount) {
-            return res.status(400).json({ message: 'Plan ID and payment information are required' });
+            return res
+                .status(400)
+                .json({
+                    message: "Plan ID and payment information are required",
+                });
         }
 
         // ตรวจสอบแผนการสมัครสมาชิก
         const subscriptionPlan = await SubscriptionPlan.findById(planId);
         if (!subscriptionPlan) {
-            return res.status(404).json({ message: 'Subscription plan not found' });
+            return res
+                .status(404)
+                .json({ message: "Subscription plan not found" });
         }
 
         // กำหนดวันเริ่มต้นและวันสิ้นสุดของการสมัครสมาชิก
@@ -84,6 +106,15 @@ const subscribe = async (req, res) => {
         // ค้นหา subscription เดิมหากมีอยู่
         let subscription = await Subscription.findOne({ user_id });
         if (subscription) {
+            if (subscriptionPlan.planType === "1 week") {
+                return res
+                    .status(409)
+                    .json({
+                        message:
+                            "You've been subscribed before, so you can't access free plan",
+                    });
+            }
+
             // อัปเดต subscription เดิม
             subscription.plan_id = planId;
             subscription.startDate = startDate;
@@ -91,9 +122,15 @@ const subscribe = async (req, res) => {
             subscription.isActive = isActive;
         } else {
             // สร้าง subscription ใหม่
-            subscription = new Subscription({ user_id, plan_id: planId, startDate, endDate, isActive });
+            subscription = new Subscription({
+                user_id,
+                plan_id: planId,
+                startDate,
+                endDate,
+                isActive,
+            });
         }
-        
+
         // บันทึก subscription ก่อนเพื่อสร้าง `_id`
         await subscription.save();
 
@@ -103,7 +140,7 @@ const subscribe = async (req, res) => {
             subscription_id: subscription._id,
             paymentDate: new Date(),
             amount: payment_info.amount,
-            status: 'success'
+            status: "success",
         });
         await paymentHistory.save();
 
@@ -126,12 +163,16 @@ const unsubscribe = async (req, res) => {
         );
 
         if (!subscription) {
-            return res.status(404).json({ message: 'Active subscription not found' });
+            return res
+                .status(404)
+                .json({ message: "Active subscription not found" });
         }
 
-        return res.status(200).json({ message: 'Successfully unsubscribed', subscription });
+        return res
+            .status(200)
+            .json({ message: "Successfully unsubscribed", subscription });
     } catch (err) {
-        return res.status(500).json({ message: 'Error unsubscribing' });
+        return res.status(500).json({ message: "Error unsubscribing" });
     }
 };
 
@@ -141,5 +182,5 @@ module.exports = {
     deleteSubscriptionPlan,
     getSubscriptionPlans,
     subscribe,
-    unsubscribe
+    unsubscribe,
 };
