@@ -236,7 +236,7 @@ const createBookContent = async (req, res) => {
             { $push: { chapters: { chapter_number, title } } }
         );
 
-        return res.json(newBookContent);
+        return res.status(201).json(newBookContent);
     } catch (err) {
         return res.status(400).json({ message: err.message });
     }
