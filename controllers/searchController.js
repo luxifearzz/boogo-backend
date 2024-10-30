@@ -11,7 +11,7 @@ const searchBooks = async (req, res) => {
                 { title: { $regex: query, $options: 'i' } }, // ค้นหา title ที่คล้ายกับคำค้นหา (ไม่คำนึงถึงตัวพิมพ์เล็กพิมพ์ใหญ่)
                 { keywords: { $regex: query, $options: 'i' } } // ค้นหา keywords ที่คล้ายกับคำค้นหา (ไม่คำนึงถึงตัวพิมพ์เล็กพิมพ์ใหญ่)
             ]
-        });
+        }).populate('authors', 'name').populate('genres', 'name');
 
         return res.json(books);
     } catch (error) {
