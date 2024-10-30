@@ -27,7 +27,10 @@ const registerUser = async (req, res) => {
             name: newUser.name,
             email: newUser.email
         };
-        return res.status(201).json(userResponse);
+
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '4h' });
+
+        return res.status(201).json({ token, user: userResponse });
     } catch (err) {
         return res.status(400).json({ message: err.message });
     }
@@ -48,7 +51,7 @@ const loginUser = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '4h' });
         
         // ส่งข้อมูล user บางส่วนกลับไปพร้อมกับ token
         res.json({ 
