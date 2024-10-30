@@ -4,7 +4,7 @@ const Book = require('../models/Book');
 // ดึงข้อมูล Genre ทั้งหมด
 const getAllGenres = async (req, res) => {
     try {
-        const genres = await Genre.find().populate('books', 'title');
+        const genres = await Genre.find().populate('books', 'title coverImage authors averageRating');
         res.json(genres);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -16,7 +16,7 @@ const getGenreById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const genre = await Genre.findById(id).populate('books', 'title');
+        const genre = await Genre.findById(id).populate('books', 'title coverImage authors averageRating');
         if (!genre) return res.status(404).json({ message: 'Genre not found' });
 
         res.json(genre);
