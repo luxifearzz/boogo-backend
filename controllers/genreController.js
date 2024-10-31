@@ -1,3 +1,4 @@
+// controllers/genreController.js
 const Genre = require('../models/Genre');
 const Book = require('../models/Book');
 

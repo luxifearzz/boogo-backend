@@ -1,3 +1,4 @@
+// controllers/authController.js
 const User = require('../models/User');
 const Blacklist = require('../models/Blacklist')
 const bcrypt = require('bcrypt');

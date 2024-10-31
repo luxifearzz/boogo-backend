@@ -1,5 +1,4 @@
-// deleteController.js
-
+// controllers/deleteController.js
 const Author = require("../models/Author");
 const Blacklist = require("../models/Blacklist");
 const Book = require("../models/Book");

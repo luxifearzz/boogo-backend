@@ -1,3 +1,4 @@
+// controllers/subscriptionControllers
 const Subscription = require("../models/Subscription");
 const SubscriptionPlan = require("../models/SubscriptionPlan");
 const PaymentHistory = require("../models/PaymentHistory");
