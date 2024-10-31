@@ -24,7 +24,7 @@ const createReview = async (req, res) => {
         // สร้างรีวิวใหม่
         const review = new Review({
             user_id,
-            bookId,
+            book_id: bookId,
             rating,
             comment
         });
