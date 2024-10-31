@@ -205,7 +205,6 @@
  *         description: Book ID
  *       - in: path
  *         name: chapterNo
- *         required: true
  *         schema:
  *           type: integer
  *         description: Chapter number
