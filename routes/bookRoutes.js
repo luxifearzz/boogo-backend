@@ -1,3 +1,23 @@
+const express = require("express");
+const router = express.Router();
+const authMiddleware = require("../middlewares/authMiddleware");
+const adminMiddleware = require("../middlewares/adminMiddleware");
+const subscriptionRequiredMiddleware = require("../middlewares/subscriptionRequiredMiddleware");
+const {
+    getBooks,
+    getBookDetailsById,
+    createBook,
+    updateBookById,
+    deleteBook,
+    createBookContent,
+    getBookContent,
+    updateBookContent,
+    deleteBookContent,
+    addGenresToBook,
+    getBookChapters,
+    randomTenBooks,
+} = require("../controllers/bookController");
+
 /**
  * @swagger
  * tags:
@@ -18,6 +38,8 @@
  *         description: Server error
  */
 
+router.get("/top10", randomTenBooks);
+
 /**
  * @swagger
  * /books:
@@ -30,6 +52,8 @@
  *       500:
  *         description: Server error
  */
+
+router.get("/", getBooks);
 
 /**
  * @swagger
@@ -53,6 +77,8 @@
  *         description: Server error
  */
 
+router.get("/:bookId", getBookDetailsById);
+
 /**
  * @swagger
  * /books/{bookId}/chapters:
@@ -75,6 +101,8 @@
  *         description: Server error
  */
 
+router.get("/:bookId/chapters", getBookChapters);
+
 /**
  * @swagger
  * /books:
@@ -91,6 +119,8 @@
  *       500:
  *         description: Server error
  */
+
+router.post("/", authMiddleware, adminMiddleware, createBook);
 
 /**
  * @swagger
@@ -116,6 +146,8 @@
  *         description: Server error
  */
 
+router.patch("/:bookId", authMiddleware, adminMiddleware, updateBookById);
+
 /**
  * @swagger
  * /books/{bookId}:
@@ -139,6 +171,8 @@
  *       500:
  *         description: Server error
  */
+
+router.delete("/:bookId", authMiddleware, adminMiddleware, deleteBook);
 
 /**
  * @swagger
@@ -164,6 +198,8 @@
  *         description: Server error
  */
 
+router.post("/:bookId/genres", authMiddleware, adminMiddleware, addGenresToBook);
+
 /**
  * @swagger
  * /books/{bookId}/contents:
@@ -188,9 +224,11 @@
  *         description: Server error
  */
 
+router.post("/:bookId/contents", authMiddleware, adminMiddleware, createBookContent);
+
 /**
  * @swagger
- * /books/{bookId}/contents/{chapterNo}:
+ * /books/{bookId}/contents/{chapterNo?}:
  *   get:
  *     summary: Retrieve book content by chapter number
  *     tags: [Books]
@@ -216,6 +254,8 @@
  *       500:
  *         description: Server error
  */
+
+router.get("/:bookId/contents/:chapterNo?", authMiddleware, subscriptionRequiredMiddleware, getBookContent);
 
 /**
  * @swagger
@@ -247,6 +287,8 @@
  *         description: Server error
  */
 
+router.patch("/:bookId/contents/:chapterNo", authMiddleware, adminMiddleware, updateBookContent);
+
 /**
  * @swagger
  * /books/{bookId}/contents/{chapterNo}:
@@ -277,37 +319,6 @@
  *         description: Server error
  */
 
-const express = require("express");
-const router = express.Router();
-const authMiddleware = require("../middlewares/authMiddleware");
-const adminMiddleware = require("../middlewares/adminMiddleware");
-const subscriptionRequiredMiddleware = require("../middlewares/subscriptionRequiredMiddleware");
-const {
-    getBooks,
-    getBookDetailsById,
-    createBook,
-    updateBookById,
-    deleteBook,
-    createBookContent,
-    getBookContent,
-    updateBookContent,
-    deleteBookContent,
-    addGenresToBook,
-    getBookChapters,
-    randomTenBooks,
-} = require("../controllers/bookController");
-
-router.get("/top10", randomTenBooks);
-router.get("/", getBooks);
-router.get("/:bookId", getBookDetailsById);
-router.get("/:bookId/chapters", getBookChapters);
-router.post("/", authMiddleware, adminMiddleware, createBook);
-router.patch("/:bookId", authMiddleware, adminMiddleware, updateBookById);
-router.delete("/:bookId", authMiddleware, adminMiddleware, deleteBook);
-router.post("/:bookId/genres", authMiddleware, adminMiddleware, addGenresToBook);
-router.post("/:bookId/contents", authMiddleware, adminMiddleware, createBookContent);
-router.get("/:bookId/contents/:chapterNo?", authMiddleware, subscriptionRequiredMiddleware, getBookContent);
-router.patch("/:bookId/contents/:chapterNo", authMiddleware, adminMiddleware, updateBookContent);
 router.delete(":bookId/contents/:chapterNo", authMiddleware, adminMiddleware, deleteBookContent);
 
 module.exports = router;
