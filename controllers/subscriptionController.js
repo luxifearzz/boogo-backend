@@ -82,11 +82,11 @@ const subscribe = async (req, res) => {
         const { payment_info } = req.body;
 
         // ตรวจสอบข้อมูลที่จำเป็น
-        if (!planId || !payment_info || !payment_info.amount) {
+        if (!planId || !payment_info || !(payment_info.amount >= 0)) {
             return res
                 .status(400)
                 .json({
-                    message: "Plan ID and payment information are required",
+                    message: "Plan ID and payment information are required"
                 });
         }
 
