@@ -1,0 +1,1682 @@
+
+window.onload = function() {
+  // Build a system
+  var url = window.location.search.match(/url=([^&]+)/);
+  if (url && url.length > 1) {
+    url = decodeURIComponent(url[1]);
+  } else {
+    url = window.location.origin;
+  }
+  var options = {
+  "swaggerDoc": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API Documentation",
+      "version": "1.0.0",
+      "description": "BOOGO API Documentation"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5000/api"
+      },
+      {
+        "url": "https://boogo-backend-api.onrender.com/api"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    },
+    "paths": {
+      "/authors": {
+        "get": {
+          "summary": "Get all authors",
+          "tags": [
+            "Authors"
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of authors"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new author",
+          "tags": [
+            "Authors"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "biography": {
+                      "type": "string"
+                    },
+                    "profile_picture": {
+                      "type": "string"
+                    },
+                    "dateOfBirth": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "nationality": {
+                      "type": "string"
+                    },
+                    "booksWritten": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Author created successfully"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "409": {
+              "description": "Author already exists"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/authors/{authorId}": {
+        "get": {
+          "summary": "Get an author by ID",
+          "tags": [
+            "Authors"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "authorId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID of the author"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The author data"
+            },
+            "404": {
+              "description": "Author not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Update an author",
+          "tags": [
+            "Authors"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "authorId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "biography": {
+                      "type": "string"
+                    },
+                    "profile_picture": {
+                      "type": "string"
+                    },
+                    "dateOfBirth": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "nationality": {
+                      "type": "string"
+                    },
+                    "booksWritten": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Author updated successfully"
+            },
+            "404": {
+              "description": "Author not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete an author",
+          "tags": [
+            "Authors"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "authorId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Author deleted successfully"
+            },
+            "404": {
+              "description": "Author not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/authors/{authorId}/books": {
+        "post": {
+          "summary": "Add books to an author",
+          "tags": [
+            "Authors"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "authorId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "books": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Books added successfully"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "404": {
+              "description": "Author not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/authors/{authorId}/books/{bookId}": {
+        "delete": {
+          "summary": "Remove a book from an author",
+          "tags": [
+            "Authors"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "authorId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Book removed successfully"
+            },
+            "400": {
+              "description": "Book not found in author's collection"
+            },
+            "404": {
+              "description": "Author not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/auth/isLoggedIn": {
+        "get": {
+          "summary": "Check if the user is logged in",
+          "tags": [
+            "Auth"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User is logged in"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/auth/isLoggedOut": {
+        "get": {
+          "summary": "Check if the user is logged out",
+          "tags": [
+            "Auth"
+          ],
+          "responses": {
+            "200": {
+              "description": "User is logged out"
+            }
+          }
+        }
+      },
+      "/auth/register": {
+        "get": {
+          "summary": "Get information on how to register",
+          "tags": [
+            "Auth"
+          ],
+          "responses": {
+            "200": {
+              "description": "Registration information"
+            }
+          }
+        },
+        "post": {
+          "summary": "Register a new user",
+          "tags": [
+            "Auth"
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User registered successfully"
+            },
+            "400": {
+              "description": "Email already registered"
+            }
+          }
+        }
+      },
+      "/auth/login": {
+        "get": {
+          "summary": "Get login information",
+          "tags": [
+            "Auth"
+          ],
+          "responses": {
+            "200": {
+              "description": "Login information"
+            }
+          }
+        },
+        "post": {
+          "summary": "Login user",
+          "tags": [
+            "Auth"
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User logged in successfully"
+            },
+            "400": {
+              "description": "Invalid credentials or user not found"
+            }
+          }
+        }
+      },
+      "/auth/info": {
+        "get": {
+          "summary": "Get user information",
+          "tags": [
+            "Auth"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User information"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/auth/logout": {
+        "get": {
+          "summary": "Logout user",
+          "tags": [
+            "Auth"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User logged out successfully"
+            }
+          }
+        }
+      },
+      "/top10": {
+        "get": {
+          "summary": "Retrieve a list of 10 random books",
+          "tags": [
+            "Books"
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of 10 books"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/": {
+        "get": {
+          "summary": "Get all collections of the user",
+          "tags": [
+            "Collections"
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of user collections"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "summary": "Create a new collection",
+          "tags": [
+            "Collections"
+          ],
+          "security": [
+            {
+              "BearerAuth": [],
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Collection created successfully"
+            },
+            "400": {
+              "description": "Validation error"
+            },
+            "409": {
+              "description": "Collection name already exists"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          },
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/{bookId}": {
+        "get": {
+          "summary": "Retrieve book details by ID",
+          "tags": [
+            "Books"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Book details"
+            },
+            "404": {
+              "description": "Book not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Update a book by ID",
+          "tags": [
+            "Books"
+          ],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Book updated"
+            },
+            "404": {
+              "description": "Book not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a book by ID",
+          "tags": [
+            "Books"
+          ],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Book deleted"
+            },
+            "404": {
+              "description": "Book not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/{bookId}/chapters": {
+        "get": {
+          "summary": "Retrieve all chapters of a book",
+          "tags": [
+            "Books"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of chapters"
+            },
+            "404": {
+              "description": "Book not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/{bookId}/genres": {
+        "post": {
+          "summary": "Add genres to a book",
+          "tags": [
+            "Books"
+          ],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Genres added to the book"
+            },
+            "400": {
+              "description": "Validation error"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/{bookId}/contents": {
+        "post": {
+          "summary": "Create new book content",
+          "tags": [
+            "Books"
+          ],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Book content created"
+            },
+            "409": {
+              "description": "Chapter already exists"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/{bookId}/contents/{chapterNo}": {
+        "get": {
+          "summary": "Retrieve book content by chapter number",
+          "tags": [
+            "Books"
+          ],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            },
+            {
+              "in": "path",
+              "name": "chapterNo",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Chapter number"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Chapter content"
+            },
+            "404": {
+              "description": "Chapter not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Update book content by chapter number",
+          "tags": [
+            "Books"
+          ],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            },
+            {
+              "in": "path",
+              "name": "chapterNo",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Chapter number"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Chapter updated"
+            },
+            "404": {
+              "description": "Chapter not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete book content by chapter number",
+          "tags": [
+            "Books"
+          ],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            },
+            {
+              "in": "path",
+              "name": "chapterNo",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Chapter number"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Chapter deleted"
+            },
+            "404": {
+              "description": "Chapter not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/{id}": {
+        "delete": {
+          "summary": "Delete a collection by ID",
+          "tags": [
+            "Collections"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Collection deleted successfully"
+            },
+            "404": {
+              "description": "Collection not found or not authorized to delete"
+            }
+          }
+        }
+      },
+      "/{id}/books": {
+        "get": {
+          "summary": "Get books from a specific collection",
+          "tags": [
+            "Collections"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Books in the collection"
+            },
+            "404": {
+              "description": "Collection not found or not authorized"
+            }
+          }
+        },
+        "post": {
+          "summary": "Add a book to a collection",
+          "tags": [
+            "Collections"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "book_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Book added to collection"
+            },
+            "404": {
+              "description": "Collection or book not found"
+            }
+          }
+        }
+      },
+      "/{id}/books/{bookId}": {
+        "delete": {
+          "summary": "Remove a book from a collection",
+          "tags": [
+            "Collections"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "bookId",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Book removed from collection"
+            },
+            "404": {
+              "description": "Collection not found or not authorized"
+            }
+          }
+        }
+      },
+      "/genres": {
+        "post": {
+          "summary": "Create a new genre",
+          "tags": [
+            "Genres"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "imageURL": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "books": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "description": "Book ID"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Genre created successfully"
+            }
+          }
+        },
+        "get": {
+          "summary": "Retrieve all genres",
+          "tags": [
+            "Genres"
+          ],
+          "responses": {
+            "200": {
+              "description": "List of genres"
+            }
+          }
+        }
+      },
+      "/genres/{id}": {
+        "get": {
+          "summary": "Retrieve a genre by ID",
+          "tags": [
+            "Genres"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Genre ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Genre details"
+            },
+            "404": {
+              "description": "Genre not found"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Update a genre by ID",
+          "tags": [
+            "Genres"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Genre ID"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "imageURL": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "books": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "description": "Book ID"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Genre updated successfully"
+            },
+            "404": {
+              "description": "Genre not found"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a genre by ID",
+          "tags": [
+            "Genres"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Genre ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Genre deleted successfully"
+            },
+            "404": {
+              "description": "Genre not found"
+            }
+          }
+        }
+      },
+      "/genres/{genreId}/books": {
+        "post": {
+          "summary": "Add books to a genre",
+          "tags": [
+            "Genres"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "genreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Genre ID"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "books": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "description": "Book ID"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Books added to genre successfully"
+            },
+            "400": {
+              "description": "Invalid request or book IDs"
+            },
+            "404": {
+              "description": "Genre not found"
+            }
+          }
+        }
+      },
+      "/reviews/{bookId}": {
+        "post": {
+          "summary": "Create a new review for a book",
+          "tags": [
+            "Reviews"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rating": {
+                      "type": "number"
+                    },
+                    "comment": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Review created successfully"
+            },
+            "404": {
+              "description": "Book not found"
+            },
+            "409": {
+              "description": "Review already exists for this book by the user"
+            }
+          }
+        },
+        "get": {
+          "summary": "Retrieve all reviews for a book",
+          "tags": [
+            "Reviews"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bookId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Book ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of reviews for the book"
+            }
+          }
+        }
+      },
+      "/reviews/{reviewId}": {
+        "delete": {
+          "summary": "Delete a review by ID",
+          "tags": [
+            "Reviews"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "reviewId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Review ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Review deleted successfully"
+            },
+            "404": {
+              "description": "No review found"
+            }
+          }
+        }
+      },
+      "/search/{query}": {
+        "get": {
+          "summary": "Search for books by title or keywords",
+          "tags": [
+            "Search"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "query",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "The search query for the book title or keywords"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of books matching the search criteria"
+            },
+            "500": {
+              "description": "Error searching books"
+            }
+          }
+        }
+      },
+      "/subscriptions/plans": {
+        "post": {
+          "summary": "Create a new subscription plan",
+          "tags": [
+            "Subscription"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "planData",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "planType": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "number"
+                  },
+                  "price": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Successfully created subscription plan"
+            },
+            "400": {
+              "description": "Invalid data provided"
+            },
+            "409": {
+              "description": "Subscription plan with this type already exists"
+            }
+          }
+        },
+        "get": {
+          "summary": "Retrieve all subscription plans",
+          "tags": [
+            "Subscription"
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of subscription plans"
+            }
+          }
+        }
+      },
+      "/subscriptions/plans/{planId}": {
+        "patch": {
+          "summary": "Update an existing subscription plan",
+          "tags": [
+            "Subscription"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "planId",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "planData",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "planType": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "number"
+                  },
+                  "price": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfully updated subscription plan"
+            },
+            "400": {
+              "description": "Invalid data provided"
+            },
+            "404": {
+              "description": "Subscription plan not found"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a subscription plan",
+          "tags": [
+            "Subscription"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "planId",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Subscription plan deleted successfully"
+            },
+            "404": {
+              "description": "Subscription plan not found"
+            }
+          }
+        }
+      },
+      "/subscriptions/{planId}": {
+        "post": {
+          "summary": "Subscribe to a subscription plan",
+          "tags": [
+            "Subscription"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "planId",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "payment_info",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Successfully subscribed to the plan"
+            },
+            "400": {
+              "description": "Missing plan ID or payment information"
+            },
+            "404": {
+              "description": "Subscription plan not found"
+            },
+            "409": {
+              "description": "User already has an active subscription"
+            }
+          }
+        }
+      },
+      "/subscriptions": {
+        "delete": {
+          "summary": "Unsubscribe from the current subscription",
+          "tags": [
+            "Subscription"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfully unsubscribed"
+            },
+            "404": {
+              "description": "No active subscription found"
+            }
+          }
+        }
+      }
+    },
+    "tags": [
+      {
+        "name": "Authors",
+        "description": "API for managing authors"
+      },
+      {
+        "name": "Auth",
+        "description": "API for user authentication and authorization"
+      },
+      {
+        "name": "Books",
+        "description": "API for managing books"
+      },
+      {
+        "name": "Collections",
+        "description": "API for managing collections"
+      }
+    ]
+  },
+  "customOptions": {}
+};
+  url = options.swaggerUrl || url
+  var urls = options.swaggerUrls
+  var customOptions = options.customOptions
+  var spec1 = options.swaggerDoc
+  var swaggerOptions = {
+    spec: spec1,
+    url: url,
+    urls: urls,
+    dom_id: '#swagger-ui',
+    deepLinking: true,
+    presets: [
+      SwaggerUIBundle.presets.apis,
+      SwaggerUIStandalonePreset
+    ],
+    plugins: [
+      SwaggerUIBundle.plugins.DownloadUrl
+    ],
+    layout: "StandaloneLayout"
+  }
+  for (var attrname in customOptions) {
+    swaggerOptions[attrname] = customOptions[attrname];
+  }
+  var ui = SwaggerUIBundle(swaggerOptions)
+
+  if (customOptions.oauth) {
+    ui.initOAuth(customOptions.oauth)
+  }
+
+  if (customOptions.preauthorizeApiKey) {
+    const key = customOptions.preauthorizeApiKey.authDefinitionKey;
+    const value = customOptions.preauthorizeApiKey.apiKeyValue;
+    if (!!key && !!value) {
+      const pid = setInterval(() => {
+        const authorized = ui.preauthorizeApiKey(key, value);
+        if(!!authorized) clearInterval(pid);
+      }, 500)
+
+    }
+  }
+
+  if (customOptions.authAction) {
+    ui.authActions.authorize(customOptions.authAction)
+  }
+
+  window.ui = ui
+}
