@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /top10:
+ * /books/top10:
  *   get:
  *     summary: Retrieve a list of 10 random books
  *     tags: [Books]
@@ -20,7 +20,7 @@
 
 /**
  * @swagger
- * /:
+ * /books:
  *   get:
  *     summary: Retrieve all books with author names
  *     tags: [Books]
@@ -33,7 +33,7 @@
 
 /**
  * @swagger
- * /{bookId}:
+ * /books/{bookId}:
  *   get:
  *     summary: Retrieve book details by ID
  *     tags: [Books]
@@ -55,7 +55,7 @@
 
 /**
  * @swagger
- * /{bookId}/chapters:
+ * /books/{bookId}/chapters:
  *   get:
  *     summary: Retrieve all chapters of a book
  *     tags: [Books]
@@ -77,7 +77,7 @@
 
 /**
  * @swagger
- * /:
+ * /books:
  *   post:
  *     summary: Create a new book
  *     tags: [Books]
@@ -94,7 +94,7 @@
 
 /**
  * @swagger
- * /{bookId}:
+ * /books/{bookId}:
  *   patch:
  *     summary: Update a book by ID
  *     tags: [Books]
@@ -118,7 +118,7 @@
 
 /**
  * @swagger
- * /{bookId}:
+ * /books/{bookId}:
  *   delete:
  *     summary: Delete a book by ID
  *     tags: [Books]
@@ -142,7 +142,7 @@
 
 /**
  * @swagger
- * /{bookId}/genres:
+ * /books/{bookId}/genres:
  *   post:
  *     summary: Add genres to a book
  *     tags: [Books]
@@ -166,7 +166,7 @@
 
 /**
  * @swagger
- * /{bookId}/contents:
+ * /books/{bookId}/contents:
  *   post:
  *     summary: Create new book content
  *     tags: [Books]
@@ -190,7 +190,7 @@
 
 /**
  * @swagger
- * /{bookId}/contents/{chapterNo}:
+ * /books/{bookId}/contents/{chapterNo}:
  *   get:
  *     summary: Retrieve book content by chapter number
  *     tags: [Books]
@@ -219,7 +219,7 @@
 
 /**
  * @swagger
- * /{bookId}/contents/{chapterNo}:
+ * /books/{bookId}/contents/{chapterNo}:
  *   patch:
  *     summary: Update book content by chapter number
  *     tags: [Books]
@@ -249,7 +249,7 @@
 
 /**
  * @swagger
- * /{bookId}/contents/{chapterNo}:
+ * /books/{bookId}/contents/{chapterNo}:
  *   delete:
  *     summary: Delete book content by chapter number
  *     tags: [Books]
