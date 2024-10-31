@@ -1,24 +1,26 @@
 // controllers/reviewController.js
-const Review = require('../models/Review');
-const Book = require('../models/Book');
+const Review = require("../models/Review");
+const Book = require("../models/Book");
 
 const createReview = async (req, res) => {
     const { rating, comment } = req.body;
-    const { bookId } = req.params
+    const { bookId } = req.params;
     const user_id = req.user.id;
 
     try {
         // ตรวจสอบว่าผู้ใช้เคยรีวิวหนังสือเล่มนี้แล้วหรือไม่
         const existingReview = await Review.findOne({ bookId, user_id });
         if (existingReview) {
-            return res.status(409).json({ message: 'You have already reviewed this book' });
+            return res
+                .status(409)
+                .json({ message: "You have already reviewed this book" });
         }
 
         // หา Book ที่ตรงกับ bookId เพื่ออัปเดตคะแนนเฉลี่ย
         const book = await Book.findById(bookId);
 
         if (!book) {
-            return res.status(404).json({ message: 'Book not found' });
+            return res.status(404).json({ message: "Book not found" });
         }
 
         // สร้างรีวิวใหม่
@@ -26,7 +28,7 @@ const createReview = async (req, res) => {
             user_id,
             book_id: bookId,
             rating,
-            comment
+            comment,
         });
 
         // บันทึกรีวิวใหม่
@@ -34,7 +36,8 @@ const createReview = async (req, res) => {
 
         // อัปเดตคะแนนเฉลี่ยของหนังสือ
         const totalReviews = book.ratings.length + 1;
-        const totalRatingSum = book.averageRating * book.ratings.length + rating;
+        const totalRatingSum =
+            book.averageRating * book.ratings.length + rating;
         const newAverageRating = totalRatingSum / totalReviews;
 
         // อัปเดตค่า averageRating ใน Book พร้อมกับเพิ่ม ObjectId ของ review ลงใน ratings
@@ -42,19 +45,21 @@ const createReview = async (req, res) => {
         book.ratings.push(savedReview._id); // เพิ่ม ObjectId ของ Review ลงใน ratings
 
         await book.save();
-        
+
         return res.status(201).json(savedReview);
     } catch (err) {
         return res.status(400).json({ message: err.message });
     }
 };
 
-// ดึงรีวิวทั้งหมดสำหรับหนังสือ
 const getReviewsByBook = async (req, res) => {
     const { bookId } = req.params;
 
     try {
-        const reviews = await Review.find({ bookId }).sort({ createdAt: -1 }); // เรียงตามวันที่รีวิวล่าสุดก่อน
+        // Match `book_id` in Review model
+        const reviews = await Review.find({ book_id: bookId })
+            .sort({ reviewDate: -1 })
+            .populate("user_id", "name profile_picture");
         res.status(200).json(reviews);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -62,23 +67,23 @@ const getReviewsByBook = async (req, res) => {
 };
 
 const deleteReviewsById = async (req, res) => {
-    const { reviewId } = req.params
+    const { reviewId } = req.params;
 
     try {
-        const deletedReview = await Review.findByIdAndDelete(reviewId)
-        
+        const deletedReview = await Review.findByIdAndDelete(reviewId);
+
         if (!deletedReview) {
-            return res.status(404).json({ message: 'No review found' })
+            return res.status(404).json({ message: "No review found" });
         }
 
-        return res.json(deletedReview)
-    } catch(err) {
-        return res.status(500).json({ message: err.message })
+        return res.json(deletedReview);
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
     }
-}
+};
 
 module.exports = {
     createReview,
     getReviewsByBook,
-    deleteReviewsById
+    deleteReviewsById,
 };
