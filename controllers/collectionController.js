@@ -10,7 +10,7 @@ const getCollections = async (req, res) => {
     try {
         const collections = await Collection.find({ user_id }).populate(
             "books",
-            "title"
+            "title coverImage"
         );
         res.json(collections);
     } catch (err) {
@@ -37,6 +37,37 @@ const createCollection = async (req, res) => {
     }
 };
 
+const updateCollection = async (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    const user_id = req.user.id;
+
+    try {
+        // ค้นหาและตรวจสอบว่า collection มีอยู่หรือไม่
+        const collection = await Collection.findOne({ _id: id, user_id });
+        if (!collection) {
+            return res.status(404).json({
+                message: "Collection not found or not authorized to update",
+            });
+        }
+
+        // อัปเดตชื่อของ collection
+        const updatedCollection = await Collection.updateOne(
+            { _id: id, user_id },
+            { $set: { name } }
+        );
+
+        // ตรวจสอบว่ามีการอัปเดตสำเร็จหรือไม่
+        if (updatedCollection.nModified === 0) {
+            return res.status(400).json({ message: "No changes made" });
+        }
+
+        return res.status(200).json({ message: "Collection updated successfully" });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
 // ลบคอลเล็กชันของผู้ใช้
 const deleteCollection = async (req, res) => {
     const { id } = req.params;
@@ -45,11 +76,9 @@ const deleteCollection = async (req, res) => {
     try {
         const collection = await Collection.findOne({ _id: id, user_id });
         if (!collection) {
-            return res
-                .status(404)
-                .json({
-                    message: "Collection not found or not authorized to delete",
-                });
+            return res.status(404).json({
+                message: "Collection not found or not authorized to delete",
+            });
         }
 
         await Collection.deleteOne({ _id: id });
@@ -150,6 +179,7 @@ const removeBookFromCollection = async (req, res) => {
 module.exports = {
     getCollections,
     createCollection,
+    updateCollection,
     deleteCollection,
     getBooksFromCollection,
     addBookToCollection,

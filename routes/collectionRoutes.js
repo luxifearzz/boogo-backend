@@ -6,7 +6,8 @@ const {
     deleteCollection,
     getBooksFromCollection,
     addBookToCollection,
-    removeBookFromCollection
+    removeBookFromCollection,
+    updateCollection
 } = require('../controllers/collectionController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
@@ -19,7 +20,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
- * /:
+ * /collections/:
  *   get:
  *     summary: Get all collections of the user
  *     tags: [Collections]
@@ -33,7 +34,7 @@ router.get('/', authMiddleware, getCollections);
 
 /**
  * @swagger
- * /:
+ * /collections/:
  *   post:
  *     summary: Create a new collection
  *     tags: [Collections]
@@ -58,7 +59,43 @@ router.post('/', authMiddleware, createCollection);
 
 /**
  * @swagger
- * /{id}:
+ * /collections/{id}:
+ *   patch:
+ *     summary: Update an existing collection
+ *     tags: [Collections]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The collection ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Collection updated successfully
+ *       400:
+ *         description: No changes made
+ *       404:
+ *         description: Collection not found or not authorized to update
+ *       500:
+ *         description: Internal server error
+ */
+router.patch('/:id', authMiddleware, updateCollection);
+
+/**
+ * @swagger
+ * /collections/{id}:
  *   delete:
  *     summary: Delete a collection by ID
  *     tags: [Collections]
@@ -80,7 +117,7 @@ router.delete('/:id', authMiddleware, deleteCollection);
 
 /**
  * @swagger
- * /{id}/books:
+ * /collections/{id}/books:
  *   get:
  *     summary: Get books from a specific collection
  *     tags: [Collections]
@@ -102,7 +139,7 @@ router.get('/:id/books', authMiddleware, getBooksFromCollection);
 
 /**
  * @swagger
- * /{id}/books:
+ * /collections/{id}/books:
  *   post:
  *     summary: Add a book to a collection
  *     tags: [Collections]
@@ -133,7 +170,7 @@ router.post('/:id/books', authMiddleware, addBookToCollection);
 
 /**
  * @swagger
- * /{id}/books/{bookId}:
+ * /collections/{id}/books/{bookId}:
  *   delete:
  *     summary: Remove a book from a collection
  *     tags: [Collections]
