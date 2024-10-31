@@ -18,7 +18,7 @@ const getRegisterInfo = async (req, res) => {
 
 // ลงทะเบียนผู้ใช้ใหม่
 const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, profile_picture } = req.body;
 
     try {
         // ตรวจสอบว่าผู้ใช้มีอยู่แล้วหรือไม่
@@ -28,13 +28,14 @@ const registerUser = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ name, email, password: hashedPassword });
+        const user = new User({ name, email, password: hashedPassword, profile_picture });
 
         const newUser = await user.save();
         const userResponse = {
             id: newUser._id,
             name: newUser.name,
-            email: newUser.email
+            email: newUser.email,
+            profile_picture: newUser.profile_picture
         };
 
         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '4h' });
