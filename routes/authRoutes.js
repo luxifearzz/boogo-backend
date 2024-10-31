@@ -80,6 +80,8 @@ router.get('/register', logoutMiddleware, getRegisterInfo);
  *                 type: string
  *               password:
  *                 type: string
+ *               profile_picture:
+ *                 type: string
  *     responses:
  *       201:
  *         description: User registered successfully

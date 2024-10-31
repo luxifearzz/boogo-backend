@@ -20,6 +20,19 @@ const getRegisterInfo = async (req, res) => {
 const registerUser = async (req, res) => {
     const { name, email, password, profile_picture } = req.body;
 
+    // Regular expression สำหรับตรวจสอบรูปแบบอีเมล
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // ตรวจสอบรูปแบบอีเมล
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email format' });
+    }
+
+    // ตรวจสอบว่า password ต้องมีความยาว >= 1
+    if (password.length < 1) {
+        return res.status(400).json({ message: 'Password must contain at least one character' });
+    }
+
     try {
         // ตรวจสอบว่าผู้ใช้มีอยู่แล้วหรือไม่
         const existingUser = await User.findOne({ email });
