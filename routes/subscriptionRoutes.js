@@ -2,10 +2,49 @@
 
 const express = require('express');
 const router = express.Router();
-const { createSubscriptionPlan, updateSubscriptionPlan, deleteSubscriptionPlan, getSubscriptionPlans, subscribe, unsubscribe } = require('../controllers/subscriptionController');
+const { createSubscriptionPlan, updateSubscriptionPlan, deleteSubscriptionPlan, getSubscriptionPlans, subscribe, unsubscribe, isSubscribed, isNotSubscribed } = require('../controllers/subscriptionController');
 const authMiddleware = require('../middlewares/authMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
 const preventDuplicateSubscriptionMiddleware = require('../middlewares/preventDuplicateSubscriptionMiddleware');
+const subscriptionRequiredMiddleware = require('../middlewares/subscriptionRequiredMiddleware')
+
+/**
+ * @swagger
+ * /subscriptions/isSubscribed:
+ *   get:
+ *     summary: Check if user is already subscribed
+ *     tags: [Subscription]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User is subscribed
+ *       401:
+ *         description: Unauthorized access
+ *       409:
+ *         description: Duplicate subscription detected
+ */
+
+router.get('/isSubscribed', authMiddleware, subscriptionRequiredMiddleware, isSubscribed)
+
+/**
+ * @swagger
+ * /subscriptions/isNotSubscribed:
+ *   get:
+ *     summary: Check if user is not subscribed
+ *     tags: [Subscription]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User is not subscribed
+ *       401:
+ *         description: Unauthorized access
+ *       403:
+ *         description: Subscription is required
+ */
+
+router.get('/isNotSubscribed', authMiddleware, preventDuplicateSubscriptionMiddleware, isNotSubscribed)
 
 /**
  * @swagger

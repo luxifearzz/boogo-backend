@@ -3,6 +3,14 @@ const Subscription = require("../models/Subscription");
 const SubscriptionPlan = require("../models/SubscriptionPlan");
 const PaymentHistory = require("../models/PaymentHistory");
 
+const isSubscribed = async (req, res) => {
+    return res.json({ message: "You're already subscribe" })
+}
+
+const isNotSubscribed = async (req, res) => {
+    return res.json({ message: "You're not subscribe yet" })
+}
+
 const createSubscriptionPlan = async (req, res) => {
     const planData = req.body;
 
@@ -178,6 +186,8 @@ const unsubscribe = async (req, res) => {
 };
 
 module.exports = {
+    isSubscribed,
+    isNotSubscribed,
     createSubscriptionPlan,
     updateSubscriptionPlan,
     deleteSubscriptionPlan,
