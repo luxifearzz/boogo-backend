@@ -228,7 +228,36 @@ router.post("/:bookId/contents", authMiddleware, adminMiddleware, createBookCont
 
 /**
  * @swagger
- * /books/{bookId}/contents/{chapterNo?}:
+ * /books/{bookId}/contents/:
+ *   get:
+ *     summary: Retrieve book content by chapter number
+ *     tags: [Books]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: bookId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Book ID
+ *       - in: path
+ *         name: chapterNo
+ *         schema:
+ *           type: integer
+ *         description: Chapter number
+ *     responses:
+ *       200:
+ *         description: Chapter content
+ *       404:
+ *         description: Chapter not found
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /books/{bookId}/contents/{chapterNo}:
  *   get:
  *     summary: Retrieve book content by chapter number
  *     tags: [Books]
