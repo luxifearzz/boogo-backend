@@ -43,7 +43,7 @@ router.get("/top10", randomTenBooks);
 
 /**
  * @swagger
- * /history:
+ * /books/history:
  *   get:
  *     summary: Retrieve the reading history of the user
  *     tags: [Books]
