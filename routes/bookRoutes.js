@@ -16,6 +16,7 @@ const {
     addGenresToBook,
     getBookChapters,
     randomTenBooks,
+    getReadingHistory,
 } = require("../controllers/bookController");
 
 /**
@@ -39,6 +40,27 @@ const {
  */
 
 router.get("/top10", randomTenBooks);
+
+/**
+ * @swagger
+ * /history:
+ *   get:
+ *     summary: Retrieve the reading history of the user
+ *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of books from the user's reading history
+ *       401:
+ *         description: Unauthorized, user needs to log in
+ *       403:
+ *         description: Forbidden, user needs an active subscription
+ *       500:
+ *         description: Server error
+ */
+
+router.get("/history", authMiddleware, subscriptionRequiredMiddleware, getReadingHistory)
 
 /**
  * @swagger

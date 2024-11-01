@@ -14,6 +14,24 @@ const randomTenBooks = async (req, res) => {
     }
 };
 
+const getReadingHistory = async (req, res) => {
+    const user_id = req.user.id;
+    
+    try {
+        const readingsHistory = await ReadingProgress.find({ user_id });
+
+        const booksHistory = await Promise.all(
+            readingsHistory.map(async (progress) => {
+                return await Book.findById(progress.book_id);
+            })
+        );
+
+        return res.json(booksHistory);
+    } catch(err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
 // ดึงข้อมูลหนังสือทั้งหมด พร้อมชื่อผู้แต่ง
 const getBooks = async (req, res) => {
     try {
@@ -419,6 +437,7 @@ const deleteBookContent = async (req, res) => {
 
 module.exports = {
     randomTenBooks,
+    getReadingHistory,
     getBooks,
     getBookDetailsById,
     getBookChapters,
