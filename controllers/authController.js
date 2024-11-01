@@ -41,7 +41,7 @@ const registerUser = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ name, email, password: hashedPassword, profile_picture });
+        const user = new User({ name, email, password: hashedPassword, profile_picture: profile_picture ? profile_picture : "https://freesvg.org/img/abstract-user-flat-4.png" });
 
         const newUser = await user.save();
         const userResponse = {
