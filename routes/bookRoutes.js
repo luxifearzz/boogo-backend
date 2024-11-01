@@ -110,7 +110,7 @@ router.get("/:bookId/chapters", getBookChapters);
  *     summary: Create a new book
  *     tags: [Books]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     responses:
  *       201:
  *         description: Book created
@@ -129,7 +129,7 @@ router.post("/", authMiddleware, adminMiddleware, createBook);
  *     summary: Update a book by ID
  *     tags: [Books]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
@@ -155,7 +155,7 @@ router.patch("/:bookId", authMiddleware, adminMiddleware, updateBookById);
  *     summary: Delete a book by ID
  *     tags: [Books]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
@@ -181,7 +181,7 @@ router.delete("/:bookId", authMiddleware, adminMiddleware, deleteBook);
  *     summary: Add genres to a book
  *     tags: [Books]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
@@ -207,7 +207,7 @@ router.post("/:bookId/genres", authMiddleware, adminMiddleware, addGenresToBook)
  *     summary: Create new book content
  *     tags: [Books]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
@@ -233,7 +233,7 @@ router.post("/:bookId/contents", authMiddleware, adminMiddleware, createBookCont
  *     summary: Retrieve book content by chapter number
  *     tags: [Books]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
@@ -257,7 +257,7 @@ router.post("/:bookId/contents", authMiddleware, adminMiddleware, createBookCont
  *     summary: Retrieve book content by chapter number
  *     tags: [Books]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
@@ -288,7 +288,7 @@ router.get("/:bookId/contents/:chapterNo?", authMiddleware, subscriptionRequired
  *     summary: Update book content by chapter number
  *     tags: [Books]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
@@ -320,7 +320,7 @@ router.patch("/:bookId/contents/:chapterNo", authMiddleware, adminMiddleware, up
  *     summary: Delete book content by chapter number
  *     tags: [Books]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
