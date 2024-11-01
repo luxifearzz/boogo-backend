@@ -6,7 +6,7 @@ const { createSubscriptionPlan, updateSubscriptionPlan, deleteSubscriptionPlan, 
 const authMiddleware = require('../middlewares/authMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
 const preventDuplicateSubscriptionMiddleware = require('../middlewares/preventDuplicateSubscriptionMiddleware');
-const subscriptionRequiredMiddleware = require('../middlewares/subscriptionRequiredMiddleware')
+const subscriptionRequiredMiddleware = require('../middlewares/subscriptionRequiredMiddleware');
 
 /**
  * @swagger
@@ -24,7 +24,6 @@ const subscriptionRequiredMiddleware = require('../middlewares/subscriptionRequi
  *       409:
  *         description: Duplicate subscription detected
  */
-
 router.get('/isSubscribed', authMiddleware, subscriptionRequiredMiddleware, isSubscribed)
 
 /**
@@ -43,7 +42,6 @@ router.get('/isSubscribed', authMiddleware, subscriptionRequiredMiddleware, isSu
  *       403:
  *         description: Subscription is required
  */
-
 router.get('/isNotSubscribed', authMiddleware, preventDuplicateSubscriptionMiddleware, isNotSubscribed)
 
 /**
@@ -54,19 +52,19 @@ router.get('/isNotSubscribed', authMiddleware, preventDuplicateSubscriptionMiddl
  *     tags: [Subscription]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: body
- *         name: planData
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             planType:
- *               type: string
- *             duration:
- *               type: number
- *             price:
- *               type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               planType:
+ *                 type: string
+ *               duration:
+ *                 type: number
+ *               price:
+ *                 type: number
  *     responses:
  *       201:
  *         description: Successfully created subscription plan
@@ -89,19 +87,21 @@ router.post('/plans', authMiddleware, adminMiddleware, createSubscriptionPlan);
  *       - in: path
  *         name: planId
  *         required: true
- *         type: string
- *       - in: body
- *         name: planData
- *         required: true
  *         schema:
- *           type: object
- *           properties:
- *             planType:
- *               type: string
- *             duration:
- *               type: number
- *             price:
- *               type: number
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               planType:
+ *                 type: string
+ *               duration:
+ *                 type: number
+ *               price:
+ *                 type: number
  *     responses:
  *       200:
  *         description: Successfully updated subscription plan
@@ -124,7 +124,8 @@ router.patch('/plans/:planId', authMiddleware, adminMiddleware, updateSubscripti
  *       - in: path
  *         name: planId
  *         required: true
- *         type: string
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Subscription plan deleted successfully
@@ -157,15 +158,20 @@ router.get('/plans', getSubscriptionPlans);
  *       - in: path
  *         name: planId
  *         required: true
- *         type: string
- *       - in: body
- *         name: payment_info
- *         required: true
  *         schema:
- *           type: object
- *           properties:
- *             amount:
- *               type: number
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               payment_info:
+ *                 type: object
+ *                 properties:
+ *                   amount:
+ *                     type: number
  *     responses:
  *       201:
  *         description: Successfully subscribed to the plan
@@ -176,6 +182,7 @@ router.get('/plans', getSubscriptionPlans);
  *       409:
  *         description: User already has an active subscription
  */
+
 router.post('/:planId', authMiddleware, preventDuplicateSubscriptionMiddleware, subscribe);
 
 /**
