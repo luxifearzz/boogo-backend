@@ -20,7 +20,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
- * /collections/:
+ * /collections:
  *   get:
  *     summary: Get all collections of the user
  *     tags: [Collections]
@@ -34,7 +34,7 @@ router.get('/', authMiddleware, getCollections);
 
 /**
  * @swagger
- * /collections/:
+ * /collections:
  *   post:
  *     summary: Create a new collection
  *     tags: [Collections]

@@ -7,7 +7,7 @@ const ReadingProgress = require("../models/ReadingProgress");
 
 const randomTenBooks = async (req, res) => {
     try {
-        const books = await Book.find().limit(10)
+        const books = await Book.aggregate([{ $sample: { size: 10 } }])
         return res.json(books)
     } catch(err) {
         return res.status(500).json({ message: err.message })

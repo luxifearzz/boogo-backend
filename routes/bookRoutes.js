@@ -111,6 +111,36 @@ router.get("/:bookId/chapters", getBookChapters);
  *     tags: [Books]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Book title
+ *               description:
+ *                 type: string
+ *                 description: Brief description of the book
+ *               publishedYear:
+ *                 type: integer
+ *                 description: Year the book was published
+ *               coverImage:
+ *                 type: string
+ *                 description: URL for the book cover image
+ *               keywords:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of keywords to add to the book
+ *             example:
+ *               title: "Example Book Title"
+ *               description: "A brief description of the book"
+ *               publishedYear: 2023
+ *               coverImage: "http://example.com/cover.jpg"
+ *               keywords: ["new keyword", "latest", "money"]
  *     responses:
  *       201:
  *         description: Book created
@@ -137,6 +167,36 @@ router.post("/", authMiddleware, adminMiddleware, createBook);
  *         schema:
  *           type: string
  *         description: Book ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Book title
+ *               description:
+ *                 type: string
+ *                 description: Brief description of the book
+ *               publishedYear:
+ *                 type: integer
+ *                 description: Year the book was published
+ *               coverImage:
+ *                 type: string
+ *                 description: URL for the book cover image
+ *               keywords:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of keywords to add to the book
+ *             example:
+ *               title: "Updated Book Title"
+ *               description: "Updated description of the book"
+ *               publishedYear: 2023
+ *               coverImage: "http://example.com/updated-cover.jpg"
+ *               keywords: ["new keyword", "update"]
  *     responses:
  *       200:
  *         description: Book updated
@@ -189,6 +249,20 @@ router.delete("/:bookId", authMiddleware, adminMiddleware, deleteBook);
  *         schema:
  *           type: string
  *         description: Book ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               genres:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of genres id to add to the book
+ *             example:
+ *               genres: ["1e21sdv32fb1f5", "21fd234ng2n15", "86hn435y4sd4r86a"]
  *     responses:
  *       200:
  *         description: Genres added to the book
@@ -215,6 +289,26 @@ router.post("/:bookId/genres", authMiddleware, adminMiddleware, addGenresToBook)
  *         schema:
  *           type: string
  *         description: Book ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               chapter_number:
+ *                 type: integer
+ *                 description: Chapter number
+ *               title:
+ *                 type: string
+ *                 description: Chapter title
+ *               content:
+ *                 type: string
+ *                 description: Chapter content
+ *             example:
+ *               chapter_number: 1
+ *               title: "This is the title of the first chapter."
+ *               content: "This is the content of the first chapter."
  *     responses:
  *       201:
  *         description: Book content created
@@ -228,7 +322,7 @@ router.post("/:bookId/contents", authMiddleware, adminMiddleware, createBookCont
 
 /**
  * @swagger
- * /books/{bookId}/contents/:
+ * /books/{bookId}/contents:
  *   get:
  *     summary: Retrieve book content by chapter number
  *     tags: [Books]
@@ -302,6 +396,22 @@ router.get("/:bookId/contents/:chapterNo?", authMiddleware, subscriptionRequired
  *         schema:
  *           type: integer
  *         description: Chapter number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Update title for the chapter
+ *               content:
+ *                 type: string
+ *                 description: Updated content for the chapter
+ *             example:
+ *               title: "This is the updated title for the chapter."
+ *               content: "This is the updated content for the chapter."
  *     responses:
  *       200:
  *         description: Chapter updated
