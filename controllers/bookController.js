@@ -7,18 +7,20 @@ const ReadingProgress = require("../models/ReadingProgress");
 
 const randomTenBooks = async (req, res) => {
     try {
-        const books = await Book.aggregate([{ $sample: { size: 10 } }])
-        return res.json(books)
-    } catch(err) {
-        return res.status(500).json({ message: err.message })
+        const books = await Book.aggregate([{ $sample: { size: 10 } }]);
+        return res.json(books);
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
     }
 };
 
 const getReadingHistory = async (req, res) => {
     const user_id = req.user.id;
-    
+
     try {
-        const readingsHistory = await ReadingProgress.find({ user_id });
+        const readingsHistory = await ReadingProgress.find({ user_id }).sort({
+            lastReadDate: "desc",
+        });
 
         const booksHistory = await Promise.all(
             readingsHistory.map(async (progress) => {
@@ -27,7 +29,7 @@ const getReadingHistory = async (req, res) => {
         );
 
         return res.json(booksHistory);
-    } catch(err) {
+    } catch (err) {
         return res.status(500).json({ message: err.message });
     }
 };
@@ -73,7 +75,9 @@ const getBookChapters = async (req, res) => {
                 .json({ message: "Can't find book with that id" });
         }
 
-        return res.json(book.chapters.sort((a, b) => a.chapter_number - b.chapter_number));
+        return res.json(
+            book.chapters.sort((a, b) => a.chapter_number - b.chapter_number)
+        );
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -252,12 +256,10 @@ const addGenresToBook = async (req, res) => {
 
         return res.json(updatedBook);
     } catch (err) {
-        return res
-            .status(500)
-            .json({
-                message: "Error adding genres to book",
-                error: err.message,
-            });
+        return res.status(500).json({
+            message: "Error adding genres to book",
+            error: err.message,
+        });
     }
 };
 
@@ -280,11 +282,9 @@ const createBookContent = async (req, res) => {
             chapter_number,
         });
         if (oldContent) {
-            return res
-                .status(409)
-                .json({
-                    message: "Chapter already exists. Use PATCH to update.",
-                });
+            return res.status(409).json({
+                message: "Chapter already exists. Use PATCH to update.",
+            });
         }
 
         const book = await Book.findById(bookId);
