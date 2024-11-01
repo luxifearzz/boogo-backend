@@ -67,7 +67,7 @@ const deleteSubscriptionPlan = async (req, res) => {
 // ดึงข้อมูลแผนการสมัครสมาชิกทั้งหมด
 const getSubscriptionPlans = async (req, res) => {
     try {
-        const subscriptionPlans = await SubscriptionPlan.find();
+        const subscriptionPlans = await SubscriptionPlan.find().sort({ duration: 'asc' });
         res.json(subscriptionPlans);
     } catch (err) {
         res.status(500).json({ message: err.message });
