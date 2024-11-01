@@ -55,7 +55,7 @@ const getBookChapters = async (req, res) => {
                 .json({ message: "Can't find book with that id" });
         }
 
-        return res.json(book.chapters);
+        return res.json(book.chapters.sort((a, b) => a.chapter_number - b.chapter_number));
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
