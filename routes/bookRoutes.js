@@ -241,11 +241,6 @@ router.post("/:bookId/contents", authMiddleware, adminMiddleware, createBookCont
  *         schema:
  *           type: string
  *         description: Book ID
- *       - in: path
- *         name: chapterNo
- *         schema:
- *           type: integer
- *         description: Chapter number
  *     responses:
  *       200:
  *         description: Chapter content
