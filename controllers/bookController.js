@@ -28,7 +28,18 @@ const getReadingHistory = async (req, res) => {
             })
         );
 
-        return res.json(booksHistory);
+        // ลบหนังสือที่ซ้ำกันโดยใช้ Set
+        const uniqueBooksHistory = [];
+        const seenBookIds = new Set();
+
+        for (const book of booksHistory) {
+            if (book && !seenBookIds.has(book._id.toString())) {
+                uniqueBooksHistory.push(book);
+                seenBookIds.add(book._id.toString());
+            }
+        }
+
+        return res.json(uniqueBooksHistory);
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
