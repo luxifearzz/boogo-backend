@@ -10,6 +10,7 @@ const {
     updateCollection
 } = require('../controllers/collectionController');
 const authMiddleware = require('../middlewares/authMiddleware');
+const subscriptionRequiredMiddleware = require('../middlewares/subscriptionRequiredMiddleware');
 
 /**
  * @swagger
@@ -30,7 +31,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
  *       200:
  *         description: A list of user collections
  */
-router.get('/', authMiddleware, getCollections);
+router.get('/', authMiddleware, subscriptionRequiredMiddleware, getCollections);
 
 /**
  * @swagger
@@ -55,7 +56,7 @@ router.get('/', authMiddleware, getCollections);
  *       409:
  *         description: Collection name already exists
  */
-router.post('/', authMiddleware, createCollection);
+router.post('/', authMiddleware, subscriptionRequiredMiddleware,createCollection);
 
 /**
  * @swagger
@@ -91,7 +92,7 @@ router.post('/', authMiddleware, createCollection);
  *       500:
  *         description: Internal server error
  */
-router.patch('/:id', authMiddleware, updateCollection);
+router.patch('/:id', authMiddleware, subscriptionRequiredMiddleware, updateCollection);
 
 /**
  * @swagger
@@ -113,7 +114,7 @@ router.patch('/:id', authMiddleware, updateCollection);
  *       404:
  *         description: Collection not found or not authorized to delete
  */
-router.delete('/:id', authMiddleware, deleteCollection);
+router.delete('/:id', authMiddleware, subscriptionRequiredMiddleware, deleteCollection);
 
 /**
  * @swagger
@@ -135,7 +136,7 @@ router.delete('/:id', authMiddleware, deleteCollection);
  *       404:
  *         description: Collection not found or not authorized
  */
-router.get('/:id/books', authMiddleware, getBooksFromCollection);
+router.get('/:id/books', authMiddleware, subscriptionRequiredMiddleware, getBooksFromCollection);
 
 /**
  * @swagger
@@ -166,7 +167,7 @@ router.get('/:id/books', authMiddleware, getBooksFromCollection);
  *       404:
  *         description: Collection or book not found
  */
-router.post('/:id/books', authMiddleware, addBookToCollection);
+router.post('/:id/books', authMiddleware, subscriptionRequiredMiddleware, addBookToCollection);
 
 /**
  * @swagger
@@ -193,6 +194,6 @@ router.post('/:id/books', authMiddleware, addBookToCollection);
  *       404:
  *         description: Collection not found or not authorized
  */
-router.delete('/:id/books/:bookId', authMiddleware, removeBookFromCollection);
+router.delete('/:id/books/:bookId', authMiddleware, subscriptionRequiredMiddleware, removeBookFromCollection);
 
 module.exports = router;
