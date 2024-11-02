@@ -11,8 +11,10 @@ const {
   getRegisterInfo,
   isLoggedIn,
   isLoggedOut,
+  isAdmin,
 } = require('../controllers/authController');
 const authMiddleware = require('../middlewares/authMiddleware');
+const adminMiddleware = require('../middlewares/adminMiddleware')
 
 /**
  * @swagger
@@ -48,6 +50,21 @@ router.get('/isLoggedIn', authMiddleware, isLoggedIn);
  *         description: User is logged out
  */
 router.get('/isLoggedOut', logoutMiddleware, isLoggedOut);
+
+
+/**
+ * @swagger
+ * /auth/isAdmin:
+ *   get:
+ *     summary: Check if the user is admin
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User is admin
+ */
+router.get('/isAdmin', authMiddleware, adminMiddleware, isAdmin)
 
 /**
  * @swagger

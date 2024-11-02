@@ -12,6 +12,10 @@ const isLoggedIn = async (req, res) => {
     return res.json({ message: "You're logged in" })
 }
 
+const isAdmin = async (req, res) => {
+    return res.json({ message: "You're admin" })
+}
+
 const getRegisterInfo = async (req, res) => {
     return res.json({ message: 'Please perform field "name", "email" and "password" and post to register' })
 }
@@ -121,6 +125,7 @@ const logout = async (req, res) => {
 module.exports = {
     isLoggedIn,
     isLoggedOut,
+    isAdmin,
     getRegisterInfo,
     registerUser,
     getLoginInfo,
